@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/brivu/reporecon/backend/src/models"
+	"github.com/brivu/reporecon/backend/src/handlers"
 )
 
 func URLHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
