@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+
+const axios = require('axios');
 
 const App: React.FC = () => {
   const [text, setText] = useState('');
@@ -10,21 +12,18 @@ const App: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     
-    const response = await fetch('http://localhost:8080/url', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url: text }),
-      });
-    
-      if (!response.ok) {
-        console.error('Failed to save URL');
-        return;
-      }
-    
+    axios.post('http://localhost:3000/url', {
+        url: text
+    })
+    .then( (response: any) => {
+        console.log(response)
+    })
+    .catch( (error: any) => {
+        console.log(error)
+    })
+
+
     event.preventDefault();
-    console.log(text);
     setText('');
   };
 
@@ -40,4 +39,8 @@ const App: React.FC = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const root = document.getElementById('root');
+if (root !== null) {
+    (ReactDOM as any).createRoot(root).render(<App />);
+
+}

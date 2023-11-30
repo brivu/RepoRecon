@@ -2,13 +2,12 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/brivu/reporecon/backend/src/models"
 	"github.com/brivu/reporecon/backend/src/routes"
-	"github.com/brivu/reporecon/backend/src/handlers"
-
+	"github.com/rs/cors"
 
 	_ "github.com/lib/pq"
 )
@@ -22,7 +21,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	routes.SetupRoutes(db)
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:8080"}, // replace with your frontend URL
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders: []string{"Content-Type", "Authorization"},
+	})
 
-	http.ListenAndServe(":8080", nil)
+	handler := c.Handler(routes.SetupRoutes(db))
+
+	fmt.Println("Server is running on :3000")
+	http.ListenAndServe(":3000", handler)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
 }
